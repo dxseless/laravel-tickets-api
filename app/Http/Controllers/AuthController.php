@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ApiLoginRequest;
+use App\Traits\ApiResponces;
+
 class AuthController extends Controller
 {
-    public function login()
+    use ApiResponces;
+    
+    public function login(ApiLoginRequest $request)
     {
-        return response()->json([
-            'message' => 'Hello, Api',
-        ], 200);
+        return $this->ok($request->get('email'));
+    }
+
+    public function register()
+    {
+        return $this->ok('registered');
     }
 }
