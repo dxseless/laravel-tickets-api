@@ -2,15 +2,16 @@
 
 namespace App\Traits;
 
-trait ApiResponces {
+trait ApiResponces
+{
     public function success($message, $statusCode = 200)
     {
         return response()->json([
             'message' => $message,
             'status' => $statusCode,
-        ], $statusCode);  
+        ], $statusCode);
     }
-    
+
     public function ok($message)
     {
         return $this->success($message, 200);

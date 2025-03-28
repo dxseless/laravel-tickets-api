@@ -8,9 +8,8 @@ use App\Traits\ApiResponces;
 class AuthController extends Controller
 {
     use ApiResponces;
-    
-    public function login(ApiLoginRequest $request)
-    {
+
+    public function login(ApiLoginRequest $request) {
         return $this->ok($request->get('email'));
     }
 
