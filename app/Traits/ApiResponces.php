@@ -21,7 +21,7 @@ trait ApiResponces
         ], $statusCode);
     }
 
-    public function ok($message, $data)
+    public function ok($message, $data = [])
     {
         return $this->success($message, $data, 200);
     }
