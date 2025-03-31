@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             Route::prefix('api/v1')->group(function () {
-                require __DIR__ . '/../routes/api_v1.php';
+                require __DIR__.'/../routes/api_v1.php';
             });
         }
     )

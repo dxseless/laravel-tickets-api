@@ -4,7 +4,16 @@ namespace App\Traits;
 
 trait ApiResponces
 {
-    public function success($message, $statusCode = 200)
+    public function success($message, $data, $statusCode = 200)
+    {
+        return response()->json([
+            'data' => $data,
+            'message' => $message,
+            'status' => $statusCode,
+        ], $statusCode);
+    }
+
+    public function error($message, $statusCode)
     {
         return response()->json([
             'message' => $message,
@@ -12,8 +21,8 @@ trait ApiResponces
         ], $statusCode);
     }
 
-    public function ok($message)
+    public function ok($message, $data)
     {
-        return $this->success($message, 200);
+        return $this->success($message, $data, 200);
     }
 }
