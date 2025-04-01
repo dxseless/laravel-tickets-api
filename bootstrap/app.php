@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            Route::prefix('api/v1')->group(function () {
+            Route::middleware('api')->prefix('api/v1')->group(function () {
                 require __DIR__.'/../routes/api_v1.php';
             });
         }
