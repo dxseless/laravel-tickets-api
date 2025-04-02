@@ -7,8 +7,8 @@ trait ApiResponces
     public function success($message, $data, $statusCode = 200)
     {
         return response()->json([
-            'data' => $data,
             'message' => $message,
+            'data' => $data,
             'status' => $statusCode,
         ], $statusCode);
     }

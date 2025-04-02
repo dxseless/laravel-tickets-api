@@ -24,11 +24,11 @@ class AuthController extends Controller
         $user = User::firstWhere('email', $request->email);
 
         return $this->ok(
-            'Auth successed', 
+            'Auth successed',
             [
-                'token' => $user->createToken('API Token for ' . $user->email, 
-                ['*'],
-                now()->addDay())->plainTextToken
+                'token' => $user->createToken('API Token for '.$user->email,
+                    ['*'],
+                    now()->addDay())->plainTextToken,
             ]
         );
     }
