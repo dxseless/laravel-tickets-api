@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    use ApiResponces;dvsd
+    use ApiResponces;
 
     public function login(LoginUserRequest $request)
     {
