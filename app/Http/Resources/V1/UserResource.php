@@ -17,16 +17,22 @@ class UserResource extends JsonResource
         return [
             'type' => 'user',
             'id' => $this->id,
-            'attrubutes' => [
+            'attributes' => [
                 'name' => $this->name,
                 'email' => $this->email,
                 $this->mergeWhen($request->routeIs('users.*'),
                     [
                         'emailVerifiedAt' => $this->email_verified_at,
-                        'updatedAt' => $this->updeted_at,
+                        'updatedAt' => $this->updated_at,
                         'createdAt' => $this->created_at,
                     ]
                 ),
+                'includes' => $this->when($request->has('include'),
+                    TicketResource::collection($this->whenLoaded('ticket')),
+                ),
+                'links' => [
+                    'self' => route('users.show', ['user' => $this->id]),
+                ],
             ],
         ];
     }
