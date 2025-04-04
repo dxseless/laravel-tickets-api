@@ -6,16 +6,16 @@ use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
-    public function include(string $relationship)
+    public function include(string $relationship): bool
     {
-        $includedValue = request()->get('include');
+        $param = request()->get('include');
 
-        if (! isset($includedValue)) {
+        if (! isset($param)) {
             return false;
         }
 
-        $includedValues = explode(',', strtolower($includedValue));
+        $includeValues = explode(',', strtolower($param));
 
-        return in_array(strtolower($relationship), $includedValues);
+        return in_array(strtolower($relationship), $includeValues);
     }
 }

@@ -16,9 +16,9 @@ abstract class QueryFilter
         $this->request = $request;
     }
 
-    protected function filter($array)
+    protected function filter($arr)
     {
-        foreach ($this->$array as $key => $value) {
+        foreach ($arr as $key => $value) {
             if (method_exists($this, $key)) {
                 $this->$key($value);
             }
@@ -31,11 +31,12 @@ abstract class QueryFilter
     {
         $this->builder = $builder;
 
-        return $builder;
-    }
+        foreach ($this->request->all() as $key => $value) {
+            if (method_exists($this, $key)) {
+                $this->$key($value);
+            }
+        }
 
-    protected function getRequest()
-    {
-        return $this->request;
+        return $builder;
     }
 }
