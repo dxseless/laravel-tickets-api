@@ -12,17 +12,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TicketController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(TicketFilter $filters)
     {
         return TicketResource::collection(Ticket::filter($filters)->get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTicketRequest $request)
     {
         try {
@@ -43,31 +37,35 @@ class TicketController extends ApiController
         return new TicketResource(Ticket::create($model));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Ticket $ticket)
+    public function show($ticket_id)
     {
-        if ($this->include('user')) {
-            return new TicketResource($ticket->load('user'));
-        }
+        try {
+            $ticket = Ticket::findOrfail($ticket_id);
 
-        return new TicketResource($ticket);
+            if ($this->include('user')) {
+                return new TicketResource($ticket->load('user'));
+            }
+
+            return new TicketResource($ticket);
+        } catch (ModelNotFoundException $exception) {
+            return $this->error('Ticket can not be found.', 404);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Ticket $ticket)
+    public function destroy($ticket_id)
     {
-        //
+        try {
+            $ticket = Ticket::findOrFail($ticket_id);
+            $ticket->delete();
+
+            return $this->ok('Ticket successfully deleted', []);
+        } catch (ModelNotFoundException $exception) {
+            return $this->error('Ticket can not be found.', 404);
+        }
     }
 }
