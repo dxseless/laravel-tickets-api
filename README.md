@@ -13,6 +13,10 @@ This API is designed to manage a ticketing system, allowing users to create, upd
 - php artisan db:seed
 - php artisan serve
 
+OR 
+
+- make setup
+
 ## Base URL
 
 ```
