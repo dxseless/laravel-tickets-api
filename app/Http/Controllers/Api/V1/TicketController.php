@@ -9,10 +9,14 @@ use App\Http\Requests\Api\V1\UpdateTicketRequest;
 use App\Http\Resources\V1\TicketResource;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Policies\V1\TicketPolicy;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TicketController extends ApiController
 {
+    protected $policyClass = TicketPolicy::class;
+
     public function index(TicketFilter $filters)
     {
         return TicketResource::collection(Ticket::filter($filters)->get());
@@ -51,11 +55,15 @@ class TicketController extends ApiController
         try {
             $ticket = Ticket::findOrfail($ticket_id);
 
+            $this->isAble('update', $ticket);
+
             $ticket->update($request->mappedAttributes());
 
             return new TicketResource($ticket);
         } catch (ModelNotFoundException $exception) {
             return $this->error('Ticket can not be found', 404);
+        } catch (AuthorizationException $exception) {
+            return $this->error('You are not authorized to update this resource', 401);
         }
     }
 
