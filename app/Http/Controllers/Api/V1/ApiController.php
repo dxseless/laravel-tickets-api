@@ -12,7 +12,7 @@ class ApiController extends Controller
 
     protected $policyClass;
 
-    public function include(string $relationship): bool
+    public function include($relationship)
     {
         $param = request()->get('include');
 
