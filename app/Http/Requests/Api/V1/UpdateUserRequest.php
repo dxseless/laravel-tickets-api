@@ -2,27 +2,32 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Permissions\V1\Abilities;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        return [
-            //
+        $user = $this->route('user');
+
+        $rules = [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,'.$user->id,
+            'password' => 'sometimes|min:8|confirmed',
+            'is_manager' => 'sometimes|boolean',
         ];
+
+        $currentUser = $this->user();
+        if (!$currentUser->tokenCan(Abilities::UpdateUser)) {
+            $rules['is_manager'] = 'prohibited';
+        }
+
+        return $rules;
     }
 }

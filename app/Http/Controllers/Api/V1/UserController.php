@@ -7,6 +7,8 @@ use App\Http\Requests\Api\V1\StoreUserRequest;
 use App\Http\Requests\Api\V1\UpdateUserRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
+use App\Permissions\V1\Abilities;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class UserController extends ApiController
 {
@@ -25,7 +27,15 @@ class UserController extends ApiController
 
     public function store(StoreUserRequest $request)
     {
-        //
+        try {
+            $this->isAble('store', User::class);
+
+            $user = User::create($request->all());
+
+            return new UserResource($user);
+        } catch (AuthorizationException $exception) {
+            return $this->error('You are not authorized to create this resource', 401);
+        }
     }
 
     public function show(User $user)
@@ -39,11 +49,27 @@ class UserController extends ApiController
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        try {
+            $this->isAble('update', $user);
+
+            $user->update($request->all());
+
+            return new UserResource($user);
+        } catch (AuthorizationException $exception) {
+            return $this->error('You are not authorized to update this resource', 401);
+        }
     }
 
     public function destroy(User $user)
     {
-        //
+        try {
+            $this->isAble('delete', $user);
+
+            $user->delete();
+
+            return $this->ok('User successfully deleted');
+        } catch (AuthorizationException $exception) {
+            return $this->error('You are not authorized to delete this resource', 401);
+        }
     }
 }
