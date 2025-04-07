@@ -1,4 +1,4 @@
-# API Documentation (USE POSTMAN FOR MORE COMFORTABLE REQUESTS)
+# API Documentation (Full Docs on your http://localhost:8000/docs)
 
 ## Overview
 
