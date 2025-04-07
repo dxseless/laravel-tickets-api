@@ -11,16 +11,11 @@ class StoreTicketRequest extends BaseTicketRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        $userIdAttribute = $this->routeIs('tickets.store') ?
-            'data.relationships.user.data.id' :
-            'user';
+        $userIdAttribute = $this->routeIs('tickets.store')
+            ? 'data.relationships.user.data.id'
+            : 'user';
 
         $rules = [
             'data.attributes.title' => 'required|string',
@@ -31,7 +26,7 @@ class StoreTicketRequest extends BaseTicketRequest
 
         $user = $this->user();
 
-        if ($user->tokenCan(Abilities::CreateOwnTicket)) {
+        if ($user && $user->tokenCan(Abilities::CreateOwnTicket)) {
             $rules[$userIdAttribute] .= '|size:'.$user->id;
         }
 
@@ -51,6 +46,28 @@ class StoreTicketRequest extends BaseTicketRequest
     {
         return [
             'data.attributes.status' => 'The data.attributes.status is invalid. Please try Completed,Hold,Active or Cancelled',
+        ];
+    }
+
+    public function bodyParameters()
+    {
+        return [
+            'data.attributes.title' => [
+                'description' => 'Title of the ticket',
+                'example' => 'Server down',
+            ],
+            'data.attributes.description' => [
+                'description' => 'Detailed description of the issue',
+                'example' => 'The main server is not responding to ping',
+            ],
+            'data.attributes.status' => [
+                'description' => 'Status of the ticket',
+                'example' => 'Active',
+            ],
+            'data.relationships.user.data.id' => [
+                'description' => 'ID of the user who owns the ticket',
+                'example' => 1,
+            ],
         ];
     }
 }

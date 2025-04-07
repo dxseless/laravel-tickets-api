@@ -15,19 +15,41 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         $user = $this->route('user');
+        $currentUser = $this->user();
 
         $rules = [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,'.$user->id,
+            'email' => 'sometimes|email|unique:users,email,'.($user ? $user->id : 'NULL'),
             'password' => 'sometimes|min:8|confirmed',
             'is_manager' => 'sometimes|boolean',
         ];
 
-        $currentUser = $this->user();
-        if (!$currentUser->tokenCan(Abilities::UpdateUser)) {
+        if ($currentUser && ! $currentUser->tokenCan(Abilities::UpdateUser)) {
             $rules['is_manager'] = 'prohibited';
         }
 
         return $rules;
+    }
+
+    public function bodyParameters()
+    {
+        return [
+            'data.attributes.title' => [
+                'description' => 'Title of the ticket',
+                'example' => 'Server down',
+            ],
+            'data.attributes.description' => [
+                'description' => 'Detailed description of the issue',
+                'example' => 'The main server is not responding to ping',
+            ],
+            'data.attributes.status' => [
+                'description' => 'Status of the ticket',
+                'example' => 'Active',
+            ],
+            'data.relationships.user.data.id' => [
+                'description' => 'ID of the user who owns the ticket',
+                'example' => 1,
+            ],
+        ];
     }
 }

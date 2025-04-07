@@ -1,0 +1,813 @@
+openapi: 3.0.3
+info:
+  title: 'Tickets REST API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.'
+security:
+  -
+    default: []
+paths:
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/login:
+    post:
+      summary: ''
+      operationId: postApiLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: gbailey@example.net
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: '+-0pBNvYgxwmi/#iw'
+                  nullable: false
+              required:
+                - email
+                - password
+  /api/register:
+    post:
+      summary: ''
+      operationId: postApiRegister
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+  /api/logout:
+    post:
+      summary: ''
+      operationId: postApiLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+  /api/v1/tickets:
+    get:
+      summary: ''
+      operationId: getApiV1Tickets
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    post:
+      summary: ''
+      operationId: postApiV1Tickets
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    attributes:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        title:
+                          type: string
+                          description: 'Title of the ticket.'
+                          example: 'Server down'
+                          nullable: false
+                        description:
+                          type: string
+                          description: 'Detailed description of the issue.'
+                          example: 'The main server is not responding to ping'
+                          nullable: false
+                        status:
+                          type: string
+                          description: 'Status of the ticket.'
+                          example: Active
+                          nullable: false
+                          enum:
+                            - Active
+                            - Completed
+                            - Hold
+                            - Cancelled
+                      required:
+                        - title
+                        - description
+                        - status
+                    relationships:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        user:
+                          type: object
+                          description: ''
+                          example: []
+                          nullable: false
+                          properties:
+                            data:
+                              type: object
+                              description: ''
+                              example: []
+                              nullable: false
+                              properties:
+                                id:
+                                  type: integer
+                                  description: 'ID of the user who owns the ticket. The <code>id</code> of an existing record in the users table.'
+                                  example: 1
+                                  nullable: false
+                              required:
+                                - id
+  '/api/v1/tickets/{id}':
+    get:
+      summary: ''
+      operationId: getApiV1TicketsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    delete:
+      summary: ''
+      operationId: deleteApiV1TicketsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the ticket.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/v1/users:
+    get:
+      summary: ''
+      operationId: getApiV1Users
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    post:
+      summary: ''
+      operationId: postApiV1Users
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: zbailey@example.net
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: '-0pBNvYgxw'
+                  nullable: false
+                is_manager:
+                  type: string
+                  description: ''
+                  example: null
+                  nullable: false
+              required:
+                - name
+                - email
+                - password
+  '/api/v1/users/{id}':
+    get:
+      summary: ''
+      operationId: getApiV1UsersId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    put:
+      summary: ''
+      operationId: putApiV1UsersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: zbailey@example.net
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: '-0pBNvYgxw'
+                  nullable: false
+                is_manager:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: false
+    delete:
+      summary: ''
+      operationId: deleteApiV1UsersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/users/{user_id}/tickets':
+    get:
+      summary: ''
+      operationId: getApiV1UsersUser_idTickets
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    post:
+      summary: ''
+      operationId: postApiV1UsersUser_idTickets
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    attributes:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        title:
+                          type: string
+                          description: 'Title of the ticket.'
+                          example: 'Server down'
+                          nullable: false
+                        description:
+                          type: string
+                          description: 'Detailed description of the issue.'
+                          example: 'The main server is not responding to ping'
+                          nullable: false
+                        status:
+                          type: string
+                          description: 'Status of the ticket.'
+                          example: Active
+                          nullable: false
+                          enum:
+                            - Active
+                            - Completed
+                            - Hold
+                            - Cancelled
+                      required:
+                        - title
+                        - description
+                        - status
+                user:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: 16
+                  nullable: false
+              required:
+                - user
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/users/{user_id}/tickets/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiV1UsersUser_idTicketsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: id
+        description: 'The ID of the ticket.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/v1/tickets/{ticket}':
+    put:
+      summary: ''
+      operationId: putApiV1TicketsTicket
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    attributes:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        title:
+                          type: string
+                          description: 'Title of the ticket.'
+                          example: 'Server down'
+                          nullable: false
+                        description:
+                          type: string
+                          description: 'Detailed description of the issue.'
+                          example: 'The main server is not responding to ping'
+                          nullable: false
+                        status:
+                          type: string
+                          description: 'Status of the ticket.'
+                          example: Active
+                          nullable: false
+                          enum:
+                            - Completed
+                            - Hold
+                            - Active
+                            - Cancelled
+                      required:
+                        - title
+                        - description
+                        - status
+                    relationships:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        user:
+                          type: object
+                          description: ''
+                          example: []
+                          nullable: false
+                          properties:
+                            data:
+                              type: object
+                              description: ''
+                              example: []
+                              nullable: false
+                              properties:
+                                id:
+                                  type: integer
+                                  description: 'ID of the user who owns the ticket.'
+                                  example: 1
+                                  nullable: false
+                              required:
+                                - id
+    patch:
+      summary: ''
+      operationId: patchApiV1TicketsTicket
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    attributes:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        title:
+                          type: string
+                          description: 'Title of the ticket.'
+                          example: 'Server down'
+                          nullable: false
+                        description:
+                          type: string
+                          description: 'Detailed description of the issue.'
+                          example: 'The main server is not responding to ping'
+                          nullable: false
+                        status:
+                          type: string
+                          description: 'Status of the ticket.'
+                          example: Active
+                          nullable: false
+                          enum:
+                            - Active
+                            - Completed
+                            - Hold
+                            - Cancelled
+                    relationships:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        user:
+                          type: object
+                          description: ''
+                          example: []
+                          nullable: false
+                          properties:
+                            data:
+                              type: object
+                              description: ''
+                              example: []
+                              nullable: false
+                              properties:
+                                id:
+                                  type: integer
+                                  description: 'ID of the user who owns the ticket.'
+                                  example: 1
+                                  nullable: false
+    parameters:
+      -
+        in: path
+        name: ticket
+        description: 'The ticket.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/v1/users/{user}/tickets/{ticket}':
+    put:
+      summary: ''
+      operationId: putApiV1UsersUserTicketsTicket
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    attributes:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        title:
+                          type: string
+                          description: 'Title of the ticket.'
+                          example: 'Server down'
+                          nullable: false
+                        description:
+                          type: string
+                          description: 'Detailed description of the issue.'
+                          example: 'The main server is not responding to ping'
+                          nullable: false
+                        status:
+                          type: string
+                          description: 'Status of the ticket.'
+                          example: Active
+                          nullable: false
+                          enum:
+                            - Completed
+                            - Hold
+                            - Active
+                            - Cancelled
+                      required:
+                        - title
+                        - description
+                        - status
+                    relationships:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        user:
+                          type: object
+                          description: ''
+                          example: []
+                          nullable: false
+                          properties:
+                            data:
+                              type: object
+                              description: ''
+                              example: []
+                              nullable: false
+                              properties:
+                                id:
+                                  type: integer
+                                  description: 'ID of the user who owns the ticket.'
+                                  example: 1
+                                  nullable: false
+                              required:
+                                - id
+    patch:
+      summary: ''
+      operationId: patchApiV1UsersUserTicketsTicket
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    attributes:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        title:
+                          type: string
+                          description: 'Title of the ticket.'
+                          example: 'Server down'
+                          nullable: false
+                        description:
+                          type: string
+                          description: 'Detailed description of the issue.'
+                          example: 'The main server is not responding to ping'
+                          nullable: false
+                        status:
+                          type: string
+                          description: 'Status of the ticket.'
+                          example: Active
+                          nullable: false
+                          enum:
+                            - Active
+                            - Completed
+                            - Hold
+                            - Cancelled
+                    relationships:
+                      type: object
+                      description: ''
+                      example: []
+                      nullable: false
+                      properties:
+                        user:
+                          type: object
+                          description: ''
+                          example: []
+                          nullable: false
+                          properties:
+                            data:
+                              type: object
+                              description: ''
+                              example: []
+                              nullable: false
+                              properties:
+                                id:
+                                  type: integer
+                                  description: 'ID of the user who owns the ticket.'
+                                  example: 1
+                                  nullable: false
+    parameters:
+      -
+        in: path
+        name: user
+        description: 'The user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: ticket
+        description: 'The ticket.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/v1/user:
+    get:
+      summary: ''
+      operationId: getApiV1User
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints

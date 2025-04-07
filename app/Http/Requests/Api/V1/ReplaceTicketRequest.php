@@ -33,4 +33,26 @@ class ReplaceTicketRequest extends BaseTicketRequest
             'data.attributes.status' => 'The data.attributes.status is invalid. Please try Completed,Hold,Active or Cancelled',
         ];
     }
+
+    public function bodyParameters()
+    {
+        return [
+            'data.attributes.title' => [
+                'description' => 'Title of the ticket',
+                'example' => 'Server down',
+            ],
+            'data.attributes.description' => [
+                'description' => 'Detailed description of the issue',
+                'example' => 'The main server is not responding to ping',
+            ],
+            'data.attributes.status' => [
+                'description' => 'Status of the ticket',
+                'example' => 'Active',
+            ],
+            'data.relationships.user.data.id' => [
+                'description' => 'ID of the user who owns the ticket',
+                'example' => 1,
+            ],
+        ];
+    }
 }
