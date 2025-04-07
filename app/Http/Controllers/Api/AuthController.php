@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginUserRequest;
 use App\Models\User;
+use App\Permissions\V1\Abilities;
 use App\Traits\ApiResponces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,8 +28,8 @@ class AuthController extends Controller
             'Auth successed',
             [
                 'token' => $user->createToken('API Token for '.$user->email,
-                    ['*'],
-                    now()->addMonth())->plainTextToken, // Month for convinience
+                    Abilities::getAbilities($user),
+                    now()->addMonth())->plainTextToken,
             ]
         );
     }
