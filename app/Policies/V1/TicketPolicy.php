@@ -16,17 +16,6 @@ class TicketPolicy
         //
     }
 
-    public function update(User $user, Ticket $ticket)
-    {
-        if ($user->tokenCan(Abilities::UpdateTicket)) {
-            return true;
-        } elseif ($user->tokenCan(Abilities::UpdateOwnTicket)) {
-            return $user->id === $ticket->user_id;
-        }
-
-        return false;
-    }
-
     public function delete(User $user, Ticket $ticket)
     {
         if ($user->tokenCan(Abilities::DeleteTicket)) {
@@ -40,7 +29,7 @@ class TicketPolicy
 
     public function replace(User $user)
     {
-        if ($user->tokenCan(Abilities::UpdateTicket)) {
+        if ($user->tokenCan(Abilities::ReplaceTicket)) {
             return true;
         }
 
@@ -49,8 +38,16 @@ class TicketPolicy
 
     public function store(User $user)
     {
-        if ($user->tokenCan(Abilities::CreateTicket)) {
+        return $user->tokenCan(Abilities::CreateTicket) ||
+               $user->tokenCan(Abilities::CreateOwnTicket);
+    }
+
+    public function update(User $user, Ticket $ticket)
+    {
+        if ($user->tokenCan(Abilities::UpdateTicket)) {
             return true;
+        } elseif ($user->tokenCan(Abilities::UpdateOwnTicket)) {
+            return $user->id === $ticket->user_id;
         }
 
         return false;

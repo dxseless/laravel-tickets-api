@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Permissions\V1\Abilities;
+
 class StoreTicketRequest extends BaseTicketRequest
 {
     /**
@@ -22,11 +24,16 @@ class StoreTicketRequest extends BaseTicketRequest
         $rules = [
             'data.attributes.title' => 'required|string',
             'data.attributes.description' => 'required|string',
-            'data.attributes.status' => 'required|string|in:Completed,Hold,Active,Cancelled',
+            'data.attributes.status' => 'required|string|in:Active,Completed,Hold,Cancelled',
+            'data.relationships.user.data.id' => 'required|integer|exists:users,id',
         ];
 
-        if (request()->routeIs('tickets.store')) {
-            $rules['data.relationships.user.data.id'] = 'required|integer';
+        $user = $this->user();
+
+        if ($this->routeIs('tickets.store')) {
+            if ($user->tokenCan(Abilities::CreateOwnTicket)) {
+                $rules['data.relationships.user.data.id'] .= '|size:'.$user->id;
+            }
         }
 
         return $rules;
