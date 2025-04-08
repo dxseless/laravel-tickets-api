@@ -72,4 +72,38 @@ class TicketControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
     }
+
+    public function test_store_requires_authentication()
+    {
+        $response = $this->postJson('/api/v1/tickets', [
+            'data' => [
+                'attributes' => [
+                    'title' => 'New Ticket',
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(401);
+    }
+
+    public function test_store_validates_input()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson('/api/v1/tickets', [
+            'data' => [
+                'attributes' => [
+                    'title' => '',
+                    'status' => 'InvalidStatus',
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors([
+                'data.attributes.title',
+                'data.attributes.status',
+            ]);
+    }
 }
