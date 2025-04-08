@@ -16,7 +16,7 @@ class TicketControllerTest extends TestCase
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
-        
+
         Ticket::factory(3)->create(['user_id' => $user->id]);
 
         $response = $this->getJson('/api/v1/tickets');
@@ -31,10 +31,45 @@ class TicketControllerTest extends TestCase
                         'attributes' => [
                             'title',
                             'status',
-                            'createdAt'
-                        ]
-                    ]
-                ]
+                            'createdAt',
+                        ],
+                    ],
+                ],
             ]);
+    }
+
+    public function test_store_creates_ticket()
+    {
+        $user = User::factory()->create(['is_manager' => false]);
+        Sanctum::actingAs($user, ['ticket:own:create']);
+
+        $response = $this->postJson('/api/v1/tickets', [
+            'data' => [
+                'attributes' => [
+                    'title' => 'New Ticket',
+                    'description' => 'Test description',
+                    'status' => 'Active',
+                ],
+                'relationships' => [
+                    'user' => [
+                        'data' => ['id' => $user->id],
+                    ],
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'attributes' => [
+                        'title' => 'New Ticket',
+                    ],
+                ],
+            ]);
+
+        $this->assertDatabaseHas('tickets', [
+            'title' => 'New Ticket',
+            'user_id' => $user->id,
+        ]);
     }
 }
