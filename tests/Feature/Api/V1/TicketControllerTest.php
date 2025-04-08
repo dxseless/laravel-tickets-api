@@ -106,4 +106,17 @@ class TicketControllerTest extends TestCase
                 'data.attributes.status',
             ]);
     }
+
+    public function test_destroy_denies_foreign_ticket_deletion()
+    {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        $ticket = Ticket::factory()->create(['user_id' => $user1->id]);
+
+        Sanctum::actingAs($user2, ['ticket:own:delete']);
+
+        $response = $this->deleteJson("/api/v1/tickets/{$ticket->id}");
+
+        $response->assertStatus(403);
+    }
 }
