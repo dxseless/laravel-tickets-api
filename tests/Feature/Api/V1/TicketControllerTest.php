@@ -119,4 +119,28 @@ class TicketControllerTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_index_filters_by_status()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        Ticket::factory()->create([
+            'status' => 'Active',
+            'user_id' => $user->id,
+        ]);
+        Ticket::factory()->create([
+            'status' => 'Completed',
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->getJson('/api/v1/tickets?filter[status]=Active');
+
+        // Проверяем ответ
+        $response->assertStatus(200)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonFragment([
+                'status' => 'Active',
+            ]);
+    }
 }
